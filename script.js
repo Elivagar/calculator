@@ -22,3 +22,8 @@ console.log(divide(15, 3));
 let firstNumber = 0;
 let secondNumber = 0;
 let operator;
+
+function operate(operator, a, b) {
+    
+}
+
