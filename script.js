@@ -18,3 +18,7 @@ console.log(add(2, 5));
 console.log(subtract(5, 2));
 console.log(multiply(4, 5));
 console.log(divide(15, 3));
+
+let firstNumber = 0;
+let secondNumber = 0;
+let operator;
