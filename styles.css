@@ -35,7 +35,7 @@ body {
     justify-content: space-between;
     margin-bottom: 10px;
     margin-top: 30px;
-    padding-right: 8px;
+    padding-right: 25px;
     gap: 10px;
 }
 
@@ -43,6 +43,10 @@ body {
     font-size: 30px;
     font-weight: bold;
     margin: 0;
+}
+
+p.storage {
+    color: rgba(255, 255, 255, 0.352);
 }
 
 /* Buttons container */
@@ -72,11 +76,11 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-#buttons #operator {
+#buttons .operator {
     background-color: #6f7846;
     font-size: 28px;
 }
 
-#buttons #topRow {
+#buttons .topRow {
     background: #696969;
 }
