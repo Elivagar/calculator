@@ -7,36 +7,42 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="calculator">
-        <div id="screen">
-            <p class="storage"></p>
-            <p class="workingField"></p>
+    <div id="container">
+        <div id="calculator">
+            <div id="screen">
+                <p class="storage"></p>
+                <p class="workingField"></p>
+            </div>
+            <div id="buttons">
+                <button id="backspace" class="topRow">⌫</button>
+                <button id="posMin" class="topRow">+/-</button>
+                <button id="percent" class="topRow">%</button>
+                <button id="divide" class="operator">÷</button>
+
+                <button id="" class="number">7</button>
+                <button id="" class="number">8</button>
+                <button id="" class="number">9</button>
+                <button id="multiply" class="operator">×</button>
+
+                <button id="" class="number">4</button>
+                <button id="" class="number">5</button>
+                <button id="" class="number">6</button>
+                <button id="subtract" class="operator">-</button>
+
+                <button id="" class="number">1</button>
+                <button id="" class="number">2</button>
+                <button id="" class="number">3</button>
+                <button id="add" class="operator">+</button>
+
+                <button class="clear">C</button>
+                <button id="num0" class="number">0</button>
+                <button id="comma">,</button>
+                <button id="equals" class="operator">=</button>
+            </div>
         </div>
-        <div id="buttons">
-            <button id="backspace" class="topRow">⌫</button>
-            <button id="posMin" class="topRow">+/-</button>
-            <button id="procent" class="topRow">%</button>
-            <button id="divide" class="operator">÷</button>
-
-            <button id="" class="number">7</button>
-            <button id="" class="number">8</button>
-            <button id="" class="number">9</button>
-            <button id="multiply" class="operator">×</button>
-
-            <button id="" class="number">4</button>
-            <button id="" class="number">5</button>
-            <button id="" class="number">6</button>
-            <button id="subtract" class="operator">-</button>
-
-            <button id="" class="number">1</button>
-            <button id="" class="number">2</button>
-            <button id="" class="number">3</button>
-            <button id="add" class="operator">+</button>
-
-            <button class="clear">C</button>
-            <button id="num0" class="number">0</button>
-            <button id="comma">,</button>
-            <button id="equals" class="operator">=</button>
+        <div id="creds">
+            <span>Built by <a href="https://github.com/Elivagar" target="_blank" rel="noopener noreferrer">Elivagar</a> | <a href="https://github.com/Elivagar/calculator" target="_blank" rel="noopener noreferrer">source code</a></span>
+            <span id="year"></span>
         </div>
     </div>
     <script src="script.js"></script>

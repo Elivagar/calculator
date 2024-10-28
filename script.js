@@ -19,6 +19,7 @@ function divide(a, b) {
 let firstNumber = "";
 let secondNumber = "";
 let savedOperator = undefined;
+let percent = false;
 
 const divideButton = document.querySelector("#divide");
 divideButton.addEventListener("click", () => {
@@ -45,6 +46,7 @@ multiplyButton.addEventListener("click", () => {
     displayValue = "";
     operatorUsed = true;
 });
+
 const subtractButton = document.querySelector("#subtract");
 subtractButton.addEventListener("click", () => {
     if (firstNumber !== "" && displayValue !== "") {
@@ -73,14 +75,22 @@ addButton.addEventListener("click", () => {
 
 const equalsButton = document.querySelector("#equals");
 equalsButton.addEventListener("click", () => {
+    if (secondNumber === "" && displayValue === "") return;
     if (firstNumber === "" && displayValue === "") return;
 
+    if (percent === true) {
+        displayValue = displayValue / 100;
+        display.innerHTML = displayValue;
+        percent = false;
+        displayValue = "";
+    }
+
     if (savedOperator) {
-    secondNumber = displayValue;
-    operate(savedOperator);
-    savedOperator = undefined;
-    displayValue = "";
-    operatorUsed = false;
+        secondNumber = displayValue;
+        operate(savedOperator);
+        savedOperator = undefined;
+        displayValue = "";
+        operatorUsed = false;
     }
 });
 
@@ -97,24 +107,27 @@ function operate(operator) {
         result = multiply(a, b);
     } else if (operator === divide) {
         result = divide(a, b);
+        if ((result === Infinity) || isNaN(result)) {
+            display.innerHTML = "OH HELL NO";
+
+            setTimeout(() => {
+                display.innerHTML = "0";
+                displayValue = "";
+                savedOperator = undefined;
+                operatorUsed = false;
+                firstNumber = "";
+                secondNumber = "";
+            }, 2000);
+
+            return;
+        }
     }
 
-    if (result === Infinity || result === NaN) {
-        display.innerHTML = "OH HELL NO";
-        displayValue = "";
-        savedOperator = undefined;
-        operatorUsed = false;
-        firstNumber = "";
-        secondNumber = "";
-    } else {
-        result = Math.round(result * 1000) / 1000;
-        display.innerHTML = result;
-        firstNumber = result;
-        secondNumber = "";
-    }
+    result = Math.round(result * 100000) / 100000;
+    display.innerHTML = result;
+    firstNumber = result;
+    secondNumber = "";
 }
-
-
 
 // Writing and populating display
 let numberButton = document.querySelectorAll(".number");
@@ -173,3 +186,16 @@ backspaceButton.addEventListener("click", () => {
         }
     }
 });
+
+let percentButton = document.querySelector("#percent");
+percentButton.addEventListener("click", () => {
+    display.innerHTML += "%";
+    percent = true;
+});
+
+let posMinButton = document.querySelector("#posMin");
+posMinButton.addEventListener("click", () => {
+
+});
+
+document.getElementById("year").textContent = "© " + new Date().getFullYear();
