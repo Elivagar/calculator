@@ -1,201 +1,168 @@
-// Operator functions
-function add(a, b) {
-    return a + b;
-}
-
-function subtract(a, b) {
-    return a - b;
-}
-
-function multiply(a, b) {
-    return a * b;
-}
-
-function divide(a, b) {
-    return a / b;
-}
-
-// Calculator logic
-let firstNumber = "";
-let secondNumber = "";
-let savedOperator = undefined;
-let percent = false;
-
-const divideButton = document.querySelector("#divide");
-divideButton.addEventListener("click", () => {
-    if (firstNumber !== "" && displayValue !== "") {
-        secondNumber = displayValue;
-        operate(savedOperator);
-    }
-
-    savedOperator = divide;
-    firstNumber = display.innerHTML;
-    displayValue = "";
-    operatorUsed = true;
-});
-
-const multiplyButton = document.querySelector("#multiply");
-multiplyButton.addEventListener("click", () => {
-    if (firstNumber !== "" && displayValue !== "") {
-        secondNumber = displayValue;
-        operate(savedOperator);
-    }
-
-    savedOperator = multiply;
-    firstNumber = display.innerHTML;
-    displayValue = "";
-    operatorUsed = true;
-});
-
-const subtractButton = document.querySelector("#subtract");
-subtractButton.addEventListener("click", () => {
-    if (firstNumber !== "" && displayValue !== "") {
-        secondNumber = displayValue;
-        operate(savedOperator);
-    }
-
-    savedOperator = subtract;
-    firstNumber = display.innerHTML;
-    displayValue = "";
-    operatorUsed = true;
-});
-
-const addButton = document.querySelector("#add");
-addButton.addEventListener("click", () => {
-    if (firstNumber !== "" && displayValue !== "") {
-        secondNumber = displayValue;
-        operate(savedOperator);
-    }
-
-    savedOperator = add;
-    firstNumber = display.innerHTML;
-    displayValue = "";
-    operatorUsed = true;
-});
-
-const equalsButton = document.querySelector("#equals");
-equalsButton.addEventListener("click", () => {
-    if (secondNumber === "" && displayValue === "") return;
-    if (firstNumber === "" && displayValue === "") return;
-
-    if (percent === true) {
-        displayValue = displayValue / 100;
-        display.innerHTML = displayValue;
-        percent = false;
-        displayValue = "";
-    }
-
-    if (savedOperator) {
-        secondNumber = displayValue;
-        operate(savedOperator);
-        savedOperator = undefined;
-        displayValue = "";
-        operatorUsed = false;
-    }
-});
-
-function operate(operator) {
-    let a = Number(firstNumber);
-    let b = Number(secondNumber);
-
-    let result;
-    if (operator === add) {
-        result = add(a, b);
-    } else if (operator === subtract) {
-        result = subtract(a, b);
-    } else if (operator === multiply) {
-        result = multiply(a, b);
-    } else if (operator === divide) {
-        result = divide(a, b);
-        if ((result === Infinity) || isNaN(result)) {
-            display.innerHTML = "OH HELL NO";
-
-            setTimeout(() => {
-                display.innerHTML = "0";
-                displayValue = "";
-                savedOperator = undefined;
-                operatorUsed = false;
-                firstNumber = "";
-                secondNumber = "";
-            }, 2000);
-
-            return;
-        }
-    }
-
-    result = Math.round(result * 100000) / 100000;
-    display.innerHTML = result;
-    firstNumber = result;
-    secondNumber = "";
-}
-
-// Writing and populating display
+const display = document.querySelector(".workingField");
+const storage = document.querySelector(".storage");
 let numberButton = document.querySelectorAll(".number");
-let zeroButton = document.querySelector("#num0");
-let commaButton = document.querySelector("#comma");
-let display = document.querySelector(".workingField");
+const clearButton = document.querySelector("#clear");
+let operatorButtons = document.querySelectorAll(".operator");
+const percentButton = document.querySelector("#percent");
+const posMinButton = document.querySelector("#posMin");
+const backspaceButton = document.querySelector("#backspace");
+const equalsButton = document.querySelector("#equals");
+const commaButton = document.querySelector("#comma");
+
+let num1 = 0;
+let num2 = 0;
+let operator = undefined;
+let displayValue = 0;
+let decimal = false;
 let operatorUsed = false;
-let displayValue = "";
-display.innerHTML = "0";
+let noWrite = false;
+let emptyStorage = false;
+display.innerHTML = displayValue;
+storage.innerHTML = "";
 
-numberButton.forEach(button => {
+function operate(num1, num2, operator) {
+    num1 = Number(num1);
+    num2 = Number(num2);
+
+    switch (operator) {
+        case "+":
+            return num1 + num2;
+        case "-":
+            return num1 - num2;
+        case "×":
+            return num1 * num2;
+        case "÷":
+            return num1 / num2;
+        default:
+            break;
+    }
+}
+
+function populateStorage(num, operatorSign) {
+    let number = num.toString();
+    if (number.includes("-")) num = "(" + num + ")";
+    if (emptyStorage) {
+        emptyStorage = false;
+        return storage.innerHTML = num + operatorSign;
+    }
+
+    if (!operatorSign) return storage.innerHTML += num;
+    return storage.innerHTML += num + operatorSign;
+}
+
+operatorButtons.forEach((button) => {
     button.addEventListener("click", () => {
-        if (display.innerHTML === "0" || display.innerHTML === "OH HELL NO") {
-            display.innerHTML = "";
-        } else if (operatorUsed === true) {
-            operatorUsed = false;
-            display.innerHTML = "";
-        }
+        if (!displayValue) return;
 
-        const buttonText = button.textContent;
-        displayValue += buttonText;
-        display.innerHTML += buttonText;
+        if (!operatorUsed) {
+            operator = button.textContent;
+            num1 = displayValue;
+            populateStorage(num1, operator);
+            displayValue = 0;
+            decimal = false;
+            operatorUsed = true;
+        } else if (operatorUsed) {
+            num2 = displayValue;
+            if (num2 === "0" && operator === "÷") return divideError();
+            displayValue = operate(num1, num2, operator);
+            displayValue = Math.round(displayValue * 100000) / 100000;
+            operator = button.textContent;
+            populateStorage(num2, operator);
+            num2 = 0;
+            display.innerHTML = displayValue;
+            num1 = displayValue;
+            displayValue = 0;
+        }
+    });
+});
+
+function divideError() {
+    display.innerHTML = "OH HELL NO";
+    storage.innerHTML += num2;
+    return setTimeout(() => {
+        clear();
+    }, 2500);
+}
+
+equalsButton.addEventListener("click", () => {
+    if (!num1) return;
+    num2 = displayValue;
+    if (!num2 || !operator) return;
+    if (num2 === "0" && operator === "÷") return divideError();
+
+    displayValue = operate(num1, num2, operator);
+    displayValue = Math.round(displayValue * 100000) / 100000;
+    populateStorage(num2);
+    num1 = 0;
+    num2 = 0;
+    display.innerHTML = displayValue;
+    operatorUsed = false;
+    noWrite = true;
+    emptyStorage = true;
+});
+
+function clear() {
+    num1 = 0;
+    num2 = 0;
+    displayValue = 0;
+    display.innerHTML = 0;
+    storage.innerHTML = "";
+    decimal = false;
+    operatorUsed = false;
+    noWrite = false;
+    emptyStorage = false;
+}
+
+clearButton.addEventListener("click", () => {
+    clear();
+});
+
+numberButton.forEach((button) => {
+    button.addEventListener("click", () => {
+        if (displayValue === 0 || noWrite || displayValue === "0") {
+            displayValue = "";
+            displayValue += button.textContent;
+            display.innerHTML = displayValue;
+            noWrite = false;
+        } else {
+            displayValue += button.textContent;
+            display.innerHTML = displayValue;
+        }
     });
 });
 
 commaButton.addEventListener("click", () => {
-    if (display.innerHTML === "0" || display.innerHTML === "OH HELL NO") {
-        displayValue = "0.";
-        display.innerHTML = "0.";
-    } else if (!display.innerHTML.includes(".")) {
-        displayValue += ".";
-        display.innerHTML += ".";
-    }
+    if (decimal === true) return;
+
+    displayValue += ".";
+    display.innerHTML = displayValue;
+    decimal = true;
 });
 
-let clearButton = document.querySelector(".clear");
-clearButton.addEventListener("click", () => {
-    displayValue = "";
-    display.innerHTML = "0";
-    savedOperator = undefined;
-    operatorUsed = false;
-    firstNumber = "";
-    secondNumber = "";
-});
-
-let backspaceButton = document.querySelector("#backspace");
 backspaceButton.addEventListener("click", () => {
-    if (displayValue === "") {
-        return;
-    } else {
-        displayValue = displayValue.slice(0, -1);
-        display.innerHTML = displayValue;
+    if (displayValue === 0) return;
+    displayValue = displayValue.slice(0, -1);
+    if (displayValue === "") displayValue = 0;
+    display.innerHTML = displayValue;
+});
 
-        if (display.innerHTML === "") {
-            display.innerHTML = "0";
-        }
+percentButton.addEventListener("click", () => {
+    if (!displayValue) return;
+
+    if (num1 && operator && displayValue && !noWrite) {
+        displayValue = (Number(num1) / 100) * displayValue;
+        display.innerHTML = displayValue;
+    } else {
+    displayValue = Number(displayValue) / 100;
+    display.innerHTML = displayValue;
     }
 });
 
-let percentButton = document.querySelector("#percent");
-percentButton.addEventListener("click", () => {
-    display.innerHTML += "%";
-    percent = true;
-});
-
-let posMinButton = document.querySelector("#posMin");
 posMinButton.addEventListener("click", () => {
+    if (!displayValue) return;
 
+    displayValue = -displayValue;
+    display.innerHTML = displayValue;
 });
 
 document.getElementById("year").textContent = "© " + new Date().getFullYear();

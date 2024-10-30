@@ -1,6 +1,6 @@
 /* General body styling */
 body {
-    background-color: rgb(60, 60, 60);
+    background-color: #1c1c1c;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -35,7 +35,7 @@ a:hover {
     align-items: center;
     font-weight: 650;
     gap: 10px;
-    color: #1c1c1c;
+    color: #d2d49d;
 }
 
 /* Calculator container styling */
@@ -66,7 +66,7 @@ a:hover {
     width: 100%;
     background-image: conic-gradient(from var(--angle), #6f7846, #78834f, #7b8e54, #8ea763, #a3b76e, #d2d49d, #505e32, #4a5530, #39422a, #6f7846);
     z-index: -1;
-    padding: 1px;
+    padding: 2px;
     border-radius: 40px;
     animation: 8s spin linear infinite;
 }
@@ -108,8 +108,9 @@ a:hover {
     margin: 0;
 }
 
-p.storage {
+#screen p.storage {
     color: rgba(255, 255, 255, 0.352);
+    font-size: 20px;
 }
 
 /* Buttons container */
@@ -140,6 +141,11 @@ p.storage {
 }
 
 #buttons .operator {
+    background-color: #6f7846;
+    font-size: 28px;
+}
+
+button#equals {
     background-color: #6f7846;
     font-size: 28px;
 }
